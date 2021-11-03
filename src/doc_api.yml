@@ -1,0 +1,396 @@
+openapi: '3.0.2'
+info:
+  title: Delilah Resto API
+  version: '1.0'
+servers:
+  - url: http://localhost:3000/api
+  
+
+tags:
+  - name: Users
+  - name: Products
+  - name: Orders
+  - name: Pay Methods
+
+paths:
+  /login:
+    post:
+      tags:
+        - "Users" 
+      summary: Login de usuarios
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password: 
+                  type: string
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+  
+  /register:
+    post:
+      tags:
+        - "Users"
+      summary: Registro de usuarios
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                name:
+                  type: string
+                lastname:
+                  type: string
+                email:
+                  type: string
+                phone:
+                  type: number
+                adress:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+
+  /products:
+      get:
+        tags:
+          - "Products" 
+        summary: Lista de Productos (Este endpoint se almacena en la cache)
+        parameters:
+          - name: token
+            in: header
+            required: true
+            schema:
+             type: object
+        responses:
+          '200':
+            description: OK
+          '401':
+            description: Unauthorized                    
+
+      post:
+        tags:
+          - "Products"
+        summary: Agregar productos por el Admin
+        parameters:
+          - name: token
+            in: header
+            required: true
+            schema:
+              type: object
+        requestBody:
+          required: true
+          content:
+            application/json:
+             schema:
+              type: object
+              properties:
+               nombre:
+                type: string
+               precio:
+                type: string
+               descripcion:
+                type: string
+        responses:
+          '200':
+            description: OK
+          '401':
+            description: Unauthorized
+
+  /products/{id}:
+      delete:
+        tags:
+          - Products
+        summary: Eliminar un producto por el Admin
+        description: Elimina un producto a traves del el ID del mismo.
+        parameters:
+          - name: token
+            in: header
+            required: true
+            schema:
+              type: object
+          - name: id
+            in: path
+            description: Product id
+            required: true
+            schema:
+              type: integer
+              format: int64
+        responses:
+          '200':
+            description: OK
+          '401':
+            description: Unauthorized
+
+      put:
+        tags:
+          - Products
+        summary: Modifica un producto por el Admin
+        description: Modifica un producto a traves del el ID del mismo.
+        parameters:
+          - name: token
+            in: header
+            required: true
+            schema:
+              type: object
+          - name: id
+            in: path
+            description: Product id
+            required: true
+            schema:
+              type: integer
+              format: int64
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 nombre:
+                   type: string
+                 precio:
+                    type: string
+                 descripcion:
+                    type: string
+        responses:
+          '200':
+            description: OK
+          '401':
+            description: Unauthorized
+
+  /pay:
+      get:
+        tags:
+          - "Pay Methods" 
+        summary: Lista de Metodos de Pago
+        parameters:
+          - name: token 
+            in: header
+            required: true
+            schema:
+             type: object
+        responses:
+          '200':
+            description: OK
+          '401':
+            description: Unauthorized                    
+
+      post:
+        tags:
+          - "Pay Methods"
+        summary: Agregar metodo de pago por el Admin
+        parameters:
+          - name: token
+            in: header
+            required: true
+            schema:
+              type: object
+        requestBody:
+          required: true
+          content:
+            application/json:
+             schema:
+              type: object
+              properties:
+               nombre:
+                type: string
+               descripcion:
+                  type: string
+        responses:
+          '200':
+            description: OK
+          '401':
+            description: Unauthorized          
+  
+  /pay/{id}:
+      delete:
+        tags:
+          - "Pay Methods"
+        summary: Eliminar un metodo de pago por el Admin
+        description: Elimina un metodo de pago a traves del el ID del mismo.
+        parameters:
+          - name: token
+            in: header
+            required: true
+            schema:
+              type: object
+          - name: id
+            in: path
+            description: Pay method id
+            required: true
+            schema:
+              type: integer
+              format: int64
+        responses:
+          '200':
+            description: OK
+          '401':
+            description: Unauthorized
+
+      put:
+        tags:
+          - "Pay Methods"
+        summary: modifica un metodo de pago por el Admin
+        description: modifica un metodo de pago a traves del el ID del mismo.
+        parameters:
+          - name: token
+            in: header
+            required: true
+            schema:
+              type: object
+          - name: id
+            in: path
+            description: Pay method id
+            required: true
+            schema:
+              type: integer
+              format: int64
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 nombre:
+                   type: string
+                 descripcion:
+                   type: string
+        responses:
+          '200':
+            description: OK
+          '401':
+            description: Unauthorized          
+  
+  /orders:
+      get:
+        tags:
+          - "Orders" 
+        summary: Lista de ordenes 
+        parameters:
+          - name: token
+            in: header
+            required: true
+            schema:
+             type: object
+        responses:
+          '200':
+            description: OK
+          '401':
+            description: Unauthorized
+      delete:
+        tags:
+          - "Orders"
+        summary: Eliminar un producto de la orden por el ID
+        parameters:
+          - name: iduser
+            in: header
+            required: true
+            schema:
+              type: number
+          - name: idproduct
+            in: path
+            description: product in order id
+            required: true
+            schema:
+              type: integer
+              format: int64
+        responses:
+          '200':
+            description: OK
+          '401':
+            description: Unauthorized
+            
+  /order:
+    
+      get:
+        tags:
+          - "Orders" 
+        summary: Entrega una orden especifica
+        parameters:
+          - name: token
+            in: header
+            required: true
+            schema:
+             type: object
+        responses:
+          '200':
+            description: OK
+          '401':
+            description: Unauthorized
+
+      post:
+        tags:
+          - "Orders"
+        summary: Crea una nueva orden 
+        parameters:
+          - name: token
+            in: header
+            required: true
+            schema:
+             type: object
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: string
+                  products:
+                    type: string
+                  paymethod:
+                    type: string
+        responses:
+          '200':
+            description: OK
+          '401':
+            description: Unauthorized
+
+  /order/add:          
+      post:
+        tags:
+          - "Orders"
+        summary: Agrega un nuevo producto luego de que la orden ha sido abierta
+        parameters:
+          - name: token
+            in: header
+            required: true
+            schema:
+             type: object
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  idProduct:
+                    type: number
+        responses:
+          '200':
+            description: OK
+          '401':
+            description: Unauthorized
+
+  
+
+  
